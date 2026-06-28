@@ -1,6 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+
+from database.session import init_db
 from routers.health import health_router
+from routers.auth import auth_router
 
 app = FastAPI(
     title="Family Budget Tracker API",
@@ -16,6 +19,9 @@ app.add_middleware(
 )
 
 app.include_router(health_router)
+app.include_router(auth_router)
+
+init_db()
 
 if __name__ == "__main__":
     import uvicorn
@@ -23,3 +29,4 @@ if __name__ == "__main__":
                 host="127.0.0.1",
                 ort=8000,
                 reload=True)
+
