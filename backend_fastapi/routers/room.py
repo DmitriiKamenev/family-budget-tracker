@@ -13,6 +13,7 @@ import services.room as room_servise
 
 
 room_router = APIRouter(prefix='/rooms')
+# Создать новую комнату
 @room_router.post('/', status_code=status.HTTP_201_CREATED)
 def createRooms(room: RoomCreate,
                 user: UserModel = Depends(get_current_user),

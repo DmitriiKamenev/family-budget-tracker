@@ -12,7 +12,7 @@ import crud.user as crud_user
 
 auth_router = APIRouter(prefix="/auth", tags="")
 
-
+# Регистрация
 @auth_router.post("/register",
     status_code=status.HTTP_201_CREATED
     )
@@ -26,7 +26,7 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
         updated_at=db_user.updated_at,
         is_active=db_user.is_active
     )
-
+# Аутентификация пользователя
 @auth_router.post("/login")
 def login(
     form_data: OAuth2PasswordRequestForm = Depends(),
