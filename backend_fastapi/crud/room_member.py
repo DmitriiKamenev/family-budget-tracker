@@ -1,3 +1,4 @@
+from typing import List
 from uuid import UUID
 
 from sqlalchemy.orm import Session
@@ -32,5 +33,14 @@ def get_all_member_room(room_id: UUID, db: Session):
         db.query(UserModel, RoomMember.role)
         .join(RoomMember, UserModel.id == RoomMember.user_id)
         .filter(RoomMember.room_id == room_id)
+        .all()
+    )
+
+def get_admin_member_room(room_id: UUID, db: Session) -> list[UserModel]:
+    return (
+        db.query(UserModel)
+        .join(RoomMember, UserModel.id == RoomMember.user_id)
+        .filter(RoomMember.room_id == room_id,
+                RoomMember.role == RoomRole.ADMIN)
         .all()
     )

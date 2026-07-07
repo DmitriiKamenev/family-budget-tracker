@@ -39,3 +39,7 @@ def get_all_member_in_room(room_id: UUID,
                            db: Session = Depends(get_db),
                            user: UserModel = Depends(get_current_user)):
     return room_servise.get_all_members_in_room(room_id, db)
+
+@room_router.delete("/rooms/{room_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_room(room_id: UUID, user: UserModel = Depends(get_current_user), db: Session = Depends(get_db)):
+    room_servise.delete_room(room_id, user.id, db)

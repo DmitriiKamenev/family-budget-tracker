@@ -2,6 +2,7 @@ from http.client import HTTPException
 from uuid import UUID
 
 from sqlalchemy.orm import Session
+from starlette import status
 
 from enums.enums import RoomRole
 from schemas.room import RoomCreate
@@ -51,10 +52,9 @@ def invite_member_in_room(invite_code: str, user_id: UUID, db: Session):
     return room
 
 def get_all_members_in_room(room_id :UUID, db: Session):
-    users = crud_room_member.get_all_member_room(room_id, db)
-    if users is None:
-        raise HTTPException(404, "Room is found")
     members = crud_room_member.get_all_member_room(room_id, db)
+    if members is None:
+        raise HTTPException(404, "Room not found")
 
     return [
         {
@@ -65,4 +65,13 @@ def get_all_members_in_room(room_id :UUID, db: Session):
         }
         for user, role in members
     ]
+
+def delete_room(room_id :UUID, user_id:  UUID, db: Session):
+    admins = crud_room_member.get_admin_member_room(room_id, db)
+    if user_id not in [admin.id for admin in admins]:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Only room admin can delete the room"
+        )
+    crud_room.delete_room(room_id, db)
 

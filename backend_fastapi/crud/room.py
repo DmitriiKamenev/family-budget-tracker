@@ -42,4 +42,11 @@ def get_room_by_invite_code(invite_code: str, db: Session):
             .first())
     return room
 
+def delete_room(room_id: UUID, db: Session):
+    members_deleted = db.query(RoomMember).filter(
+        RoomMember.room_id == room_id
+    ).delete()
+
+    (db.query(RoomModel).filter(RoomModel.id == room_id).delete())
+    db.commit()
 
