@@ -5,6 +5,7 @@ from database.session import init_db
 from routers.health import health_router
 from routers.auth import auth_router
 from routers.room import room_router
+from routers.category import category_router
 
 app = FastAPI(
     title="Family Budget Tracker API",
@@ -22,6 +23,7 @@ app.add_middleware(
 app.include_router(health_router)
 app.include_router(auth_router)
 app.include_router(room_router)
+app.include_router(category_router)
 
 init_db()
 
