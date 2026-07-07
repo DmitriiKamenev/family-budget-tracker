@@ -1,4 +1,4 @@
-from http.client import HTTPException
+from fastapi import HTTPException, status
 from uuid import UUID
 
 from sqlalchemy.orm import Session
@@ -51,7 +51,11 @@ def invite_member_in_room(invite_code: str, user_id: UUID, db: Session):
     db.commit()
     return room
 
-def get_all_members_in_room(room_id :UUID, db: Session):
+def get_all_members_in_room(room_id :UUID, user_id: UUID, db: Session):
+    rooms = get_user_rooms(user_id, db)
+    if room_id not in [room.id for room in rooms]:
+        raise HTTPException(404, "Room not found")
+
     members = crud_room_member.get_all_member_room(room_id, db)
     if members is None:
         raise HTTPException(404, "Room not found")

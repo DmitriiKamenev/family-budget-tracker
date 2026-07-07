@@ -21,12 +21,13 @@ def createRooms(room: RoomCreate,
     return room_servise.create_room(room=room,
                                     user_id=user.id,
                                     db=db)
-
+# Получить все комнаты пользователя
 @room_router.get('/')
 def get_rooms_user(user: UserModel = Depends(get_current_user),
                    db: Session = Depends(get_db)):
     return room_servise.get_user_rooms(user_id=user.id, db=db)
 
+# Пригласить пользователя в комнату по инвайт коду
 @room_router.post('/join/{invite_code}')
 def join_room_by_invite_code(invite_code: str,
                              user: UserModel = Depends(get_current_user),
@@ -34,12 +35,15 @@ def join_room_by_invite_code(invite_code: str,
     return room_servise.invite_member_in_room(invite_code=invite_code,
                                               user_id=user.id, db=db)
 
+# Получить всех пользователей комнаты
 @room_router.get("/{room_id}/members")
 def get_all_member_in_room(room_id: UUID,
                            db: Session = Depends(get_db),
                            user: UserModel = Depends(get_current_user)):
-    return room_servise.get_all_members_in_room(room_id, db)
+    return room_servise.get_all_members_in_room(room_id, user.id, db)
 
+
+# Удалить комнату
 @room_router.delete("/rooms/{room_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_room(room_id: UUID, user: UserModel = Depends(get_current_user), db: Session = Depends(get_db)):
     room_servise.delete_room(room_id, user.id, db)
