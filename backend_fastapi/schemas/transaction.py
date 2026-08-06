@@ -4,7 +4,7 @@ from decimal import Decimal
 
 from pydantic import BaseModel, ConfigDict
 
-from .enums import TransactionType
+from enums.enums import  TransactionType
 
 
 class TransactionBase(BaseModel):

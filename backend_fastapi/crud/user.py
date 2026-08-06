@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from sqlalchemy.orm import Session
 from models.user import User as UserModel
 from schemas.user import UserCreate
@@ -16,6 +18,12 @@ def get_user_by_email(email: str, db: Session):
         .first()
     )
 
+def get_user_by_id(user_id: UUID, db: Session):
+    return (
+        db.query(UserModel)
+        .filter(UserModel.id == user_id)
+        .first()
+    )
 
 def create_user(user: UserCreate, db: Session):
 
