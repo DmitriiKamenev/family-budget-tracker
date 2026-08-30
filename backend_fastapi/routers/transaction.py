@@ -13,16 +13,39 @@ from uuid import UUID
 
 import services.transaction as transaction_services
 
-transaction_router = APIRouter(prefix='/transaction')
+transaction_router = APIRouter(prefix="/rooms/{room_id}/transactions",
+                               tags=["Transactions"])
 
-@transaction_router.post(path='/')
+
+@transaction_router.post(path='/',
+                         response_model=TransactionResponse,
+                         status_code=status.HTTP_201_CREATED)
 def add_transaction(transaction: TransactionCreate,
-                 user: UserModel = Depends(get_current_user),
-                 db: Session = Depends(get_db)):
-    return transaction_services.create_transaction(transaction, user.id, db)
+                    room_id: UUID,
+                    user: UserModel = Depends(get_current_user),
+                    db: Session = Depends(get_db)):
+    return transaction_services.create_transaction(transaction, room_id, user.id, db)
 
-@transaction_router.get(path='/{room_id}/', response_model=List[TransactionResponse])
-def get_category(room_id: UUID,
-                 user: UserModel = Depends(get_current_user),
-                 db: Session = Depends(get_db)):
+
+@transaction_router.get(path='/',
+                        response_model=List[TransactionResponse])
+def get_transactions(room_id: UUID,
+                     user: UserModel = Depends(get_current_user),
+                     db: Session = Depends(get_db)):
     return transaction_services.get_room_transaction(user.id, room_id, db)
+
+
+@transaction_router.get(path='/{transaction_id}',
+                        response_model=TransactionResponse)
+def get_by_id_transaction(room_id: UUID,
+                          transaction_id: UUID,
+                          user: UserModel = Depends(get_current_user),
+                          db: Session = Depends(get_db)):
+    return transaction_services.get_by_id_transaction(transaction_id, user.id, room_id, db)
+
+@transaction_router.delete(path='/{transaction_id}')
+def delete_transaction(room_id: UUID,
+                          transaction_id: UUID,
+                          user: UserModel = Depends(get_current_user),
+                          db: Session = Depends(get_db)):
+    return transaction_services.delete_transaction(transaction_id, user.id, room_id, db)
