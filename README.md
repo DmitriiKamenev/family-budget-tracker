@@ -36,8 +36,6 @@ family-budget-tracker/
 ├── core/
 ├── database/
 ├── main.py
-├── Dockerfile
-├── docker-compose.yml
 └── requirements.txt
 ```
 
@@ -69,13 +67,6 @@ Swagger-документация:
 http://localhost:8000/docs
 ```
 
-### Docker
-
-Для запуска проекта через Docker Compose:
-
-```bash
-docker compose up --build
-```
 
 ## 🌿 Ветки
 
